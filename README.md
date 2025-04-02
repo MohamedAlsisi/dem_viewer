@@ -7,7 +7,7 @@ A Rust-based application to visualize high-resolution Digital Elevation Maps (DE
 ## 👨‍💻 Authors
 
 - Mohamed Alsisi  
-- Pablo Candelas
+- Pablo  
 
 ---
 
@@ -32,11 +32,11 @@ This project is a visualization tool for DEM data based on ASC (ESRI ASCII Raste
 | ✅ Colored DEM        | Using `colorgrad::turbo` for vibrant color mapping |
 | ✅ Hillshading        | Simulated lighting based on slope and aspect |
 | ✅ Hillshade + Color  | Combined shaded + color image for realism |
-| ✅ Contour Lines      | red contour overlays for elevation breaks |
+| ✅ Contour Lines      | Optional 3x3 red contour overlays for elevation breaks |
 
 ---
 
 ## 📁 Input
 
-The input is a `.asc` file structured in the ESRI ASCII raster format, for example: LITTO3D_FRA_0928_6225_MNT_20150128_LAMB93_RGF93_IGN69.asc
+The input is a `.asc` file structured in the ESRI ASCII raster format, for example:
 
