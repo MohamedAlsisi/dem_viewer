@@ -7,7 +7,7 @@ A Rust-based application to visualize high-resolution Digital Elevation Maps (DE
 ## 👨‍💻 Authors
 
 - Mohamed Alsisi  
-- Pablo  
+- Pablo Candelas
 
 ---
 
