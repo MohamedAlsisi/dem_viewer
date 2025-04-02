@@ -32,7 +32,7 @@ This project is a visualization tool for DEM data based on ASC (ESRI ASCII Raste
 | ✅ Colored DEM        | Using `colorgrad::turbo` for vibrant color mapping |
 | ✅ Hillshading        | Simulated lighting based on slope and aspect |
 | ✅ Hillshade + Color  | Combined shaded + color image for realism |
-| ✅ Contour Lines      | Optional 3x3 red contour overlays for elevation breaks |
+| ✅ Contour Lines      | red contour overlays for elevation breaks |
 
 ---
 
