@@ -7,7 +7,7 @@ A Rust-based application to visualize high-resolution Digital Elevation Maps (DE
 ## 👨‍💻 Authors
 
 - Mohamed Alsisi  
-- Pablo  
+- Pablo Candelas
 
 ---
 
@@ -38,5 +38,5 @@ This project is a visualization tool for DEM data based on ASC (ESRI ASCII Raste
 
 ## 📁 Input
 
-The input is a `.asc` file structured in the ESRI ASCII raster format, for example:
+The input is a `.asc` file structured in the ESRI ASCII raster format, for example: LITTO3D_FRA_0928_6225_MNT_20150128_LAMB93_RGF93_IGN69.asc
 
