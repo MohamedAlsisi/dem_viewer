@@ -1,6 +1,6 @@
 // PDCP and MA Rust exam 2025
 // instructions: https://docs.google.com/document/d/1715_OBLBiObkOKHCpMefYCrTg0mXt-c7hjM171OzVSU/edit?tab=t.0
-// Last update 28/marzo/2025
+// Last update 2/abril/2025
 
 //Import libraries 
 // Initial libraries and the ones to import the ASC file
@@ -19,10 +19,17 @@ use colorgrad::Gradient;
 // Library for hillshade 
 use std::f64::consts::PI;
 
+use image::{DynamicImage, RgbaImage, imageops};
 
 fn main() {
     // Bonjour
     println!("\n\tHola!!\n");
+    println!("This code will compute several images to visualize the elevation map");
+    println!("First 4 iamges are computes that are the following:");
+    println!("  - grayscale image");
+    println!("  - colored image");
+    println!("  - grayscale + shadehill image");
+    println!("  - colored + shadehill image");
 
     // READING THE ASC FILE 
     // Input the specific path where the file is found. (see bellow the auxiliary function created to read the file)
@@ -66,7 +73,7 @@ fn main() {
     }
     azimuth_math = azimuth_math*PI/180.0; // converting to radians (using same variable no need to create new one)
 
-    println!("Hillshade calculation made with values:");
+    println!("\nHillshade calculation made with values:");
     println!("\tazimuth = {azimuth}");
     println!("\taltitude = {altitude} ");
     println!("\tcellsize = {cellsize}");
@@ -132,6 +139,7 @@ fn main() {
         }
     }
 
+    println!("Images computed and saved as follows:");
     // Save images
     grayscale_img.save("output_grayscale.png").expect("Failed to save grayscale image");
     color_img.save("output_color.png").expect("Failed to save color image");
@@ -145,15 +153,30 @@ fn main() {
     println!("\nPlease visualize the images by opening the files :)");
 
     // EXTRA FEATURE --------------------------------------------------------------------------
+    println!("\n Now in this part the additional features are made. \nThe additional feature is a display of the elevations isolines ");
     // Call to generate contour lines, here you specify how many contour lines you'd like (e.g., 10 contours)
-    let num_contours = 10; // Modify this number as needed for your use case
-    generate_contours(&grid, ncols, nrows, min_val, max_val, num_contours, &mut hillshade_color_img);
+    let num_contours = 10; 
+    println!("Amount of countour elvations lines: {num_contours}");
+    let mut hillshade_with_contours = hillshade_color_img.clone();
+    
+    generate_contours(&grid, ncols, nrows, min_val, max_val, num_contours, &mut hillshade_with_contours);
 
     // Save the image with contour lines directly overlayed on the hillshade
-    hillshade_color_img.save("output_with_hillshade_and_contours.png").expect("Failed to save combined image with hillshade and contours");
+    hillshade_with_contours.save("output_with_hillshade_and_contours.png").expect("Failed to save combined image with hillshade and contours");
 
-    println!("Combined image saved as output_with_hillshade_and_contours.png");
+    println!("Image with countour lines saved as output_with_hillshade_and_contours.png");
 
+    let composite = combine_images_in_memory(
+        &grayscale_img,
+        &color_img,
+        &hillshade_with_contours,
+        &hillshade_color_img,
+    );
+
+    composite.save("composite.png").expect("Failed to save hillsahde grayscale image");
+
+    let _ = open::that("output_composite.png");
+    println!("\nFInal image with all the results saved as composite.png, please open this to visualize it! ;D");
     // BYE BYE BYE
     println!("\n\tBYEEE\n")
 }
@@ -191,10 +214,9 @@ fn generate_contours(
     num_contours: u32,
     image: &mut RgbImage
 ) {
-    // Calculate the contour interval (spacing between contour lines)
     let contour_interval = (max_val - min_val) / (num_contours as f64);
 
-    // Bright dark red color in RGB (you can adjust the exact color)
+    
     let bright_dark_red = Rgb([139, 0, 0]); // Dark red color
 
     // Iterate over the grid and draw contour lines directly on the hillshade image
@@ -225,4 +247,27 @@ fn generate_contours(
             }
         }
     }
+}
+
+fn combine_images_in_memory(
+    grayscale_img: &GrayImage,
+    color_img: &RgbImage,
+    hillshade_contour_img: &RgbImage,
+    hillshade_color_img: &RgbImage,
+) -> RgbaImage {
+    // Convert all to RGBA
+    let gray = DynamicImage::ImageLuma8(grayscale_img.clone()).to_rgba8();
+    let color = DynamicImage::ImageRgb8(color_img.clone()).to_rgba8();
+    let hill_contour = DynamicImage::ImageRgb8(hillshade_contour_img.clone()).to_rgba8();
+    let hill_color = DynamicImage::ImageRgb8(hillshade_color_img.clone()).to_rgba8();
+
+    let (width, height) = gray.dimensions();
+    let mut composite = RgbaImage::new(width * 2, height * 2);
+
+    imageops::overlay(&mut composite, &gray, 0, 0);
+    imageops::overlay(&mut composite, &color, width as i64, 0);
+    imageops::overlay(&mut composite, &hill_contour, 0, height as i64);
+    imageops::overlay(&mut composite, &hill_color, width as i64, height as i64);
+
+    composite
 }
